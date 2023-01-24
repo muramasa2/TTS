@@ -22,14 +22,18 @@ from TTS.tts.configs.shared_configs import CharactersConfig
 from TTS.tts.datasets.dataset import TTSDataset, _parse_sample
 from TTS.tts.layers.glow_tts.duration_predictor import DurationPredictor
 from TTS.tts.layers.vits.discriminator import VitsDiscriminator
-from TTS.tts.layers.vits.networks import PosteriorEncoder, ResidualCouplingBlocks, TextEncoder
-from TTS.tts.layers.vits.stochastic_duration_predictor import StochasticDurationPredictor
+from TTS.tts.layers.vits.networks import (PosteriorEncoder,
+                                          ResidualCouplingBlocks, TextEncoder)
+from TTS.tts.layers.vits.stochastic_duration_predictor import \
+    StochasticDurationPredictor
 from TTS.tts.models.base_tts import BaseTTS
-from TTS.tts.utils.helpers import generate_path, maximum_path, rand_segments, segment, sequence_mask
+from TTS.tts.utils.helpers import (generate_path, maximum_path, rand_segments,
+                                   segment, sequence_mask)
 from TTS.tts.utils.languages import LanguageManager
 from TTS.tts.utils.speakers import SpeakerManager
 from TTS.tts.utils.synthesis import synthesis
-from TTS.tts.utils.text.characters import BaseCharacters, _characters, _pad, _phonemes, _punctuations
+from TTS.tts.utils.text.characters import (BaseCharacters, _characters, _pad,
+                                           _phonemes, _punctuations)
 from TTS.tts.utils.text.tokenizer import TTSTokenizer
 from TTS.tts.utils.visual import plot_alignment
 from TTS.utils.io import load_fsspec
@@ -477,8 +481,8 @@ class VitsArgs(Coqpit):
         use_d_vector_file (bool):
             Enable/Disable the use of d-vectors for multi-speaker training. Defaults to False.
 
-        d_vector_file (List[str]):
-            List of paths to the files including pre-computed speaker embeddings. Defaults to None.
+        d_vector_file (str):
+            Path to the file including pre-computed speaker embeddings. Defaults to None.
 
         d_vector_dim (int):
             Number of d-vector channels. Defaults to 0.
@@ -573,7 +577,7 @@ class VitsArgs(Coqpit):
     use_speaker_embedding: bool = False
     num_speakers: int = 0
     speakers_file: str = None
-    d_vector_file: List[str] = None
+    d_vector_file: str = None
     speaker_embedding_channels: int = 256
     use_d_vector_file: bool = False
     d_vector_dim: int = 0
@@ -1679,9 +1683,7 @@ class Vits(BaseTTS):
         """Get criterions for each optimizer. The index in the output list matches the optimizer idx used in
         `train_step()`"""
         from TTS.tts.layers.losses import (  # pylint: disable=import-outside-toplevel
-            VitsDiscriminatorLoss,
-            VitsGeneratorLoss,
-        )
+            VitsDiscriminatorLoss, VitsGeneratorLoss)
 
         return [VitsDiscriminatorLoss(self.config), VitsGeneratorLoss(self.config)]
 
